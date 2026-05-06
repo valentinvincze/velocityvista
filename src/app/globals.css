@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@variant dark (&:where(.dark, .dark *));
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-page: #faf9f5;
+  --color-form: #ffffff;
+  --color-svg: #ededed;
+  --color-placeholder: #7a7a7a;
+  --color-label: #3e3e3e;
+  --color-performance-card: #141512;
+  --color-card: #ffffff;
+  --color-outer-stroke: #faf9f5;
+  --color-inner-stroke: #30302e;
+  --color-inner-text: #ffffff;
+  --color-chart-line: #30302e;
+  --color-chart-line-muted: #b8b7b3;
+  --color-chart-grid: #e5e4e0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --color-page: #141512;
+  --color-form: #30302e;
+  --color-svg: #40403e;
+  --color-placeholder: #7a7a7a;
+  --color-label: #a7a6a2;
+  --color-performance-card: #faf9f5;
+  --color-card: #30302e;
+  --color-outer-stroke: #141512;
+  --color-inner-stroke: #d4d2cc;
+  --color-inner-text: #000000;
+  --color-chart-line: #d4d2cc;
+  --color-chart-line-muted: #5a5a58;
+  --color-chart-grid: #3d3d3b;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
