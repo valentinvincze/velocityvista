@@ -1,11 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "./lib/supabase/server";
 
 const ADMIN_ROLES = ["admin", "coo"];
 
 function redirect(request: NextRequest, pathname: string) {
   const url = request.nextUrl.clone();
   url.pathname = pathname;
+  url.search = "";
   return NextResponse.redirect(url);
 }
 
@@ -43,6 +45,33 @@ export async function proxy(request: NextRequest) {
 
   if (!user && !pathname.startsWith("/auth")) {
     return redirect(request, "/auth/signin");
+  }
+
+  if (pathname === "/auth/signup") {
+    const supabase = await createClient();
+    const token = request.nextUrl.searchParams.get("token");
+
+    if (!token) return redirect(request, "/auth/signin");
+
+    const { data, error } = await supabase
+      .from("invites")
+      .select("expires_at")
+      .eq("token", token);
+
+    if (error) {
+      console.error(
+        "Supabase error during invites table fetch:",
+        error.message,
+      );
+      return redirect(request, "/auth/signin");
+    }
+
+    if (!data[0]) return redirect(request, "/auth/signin");
+
+    const today = new Date().getTime();
+    const expiry = new Date(data[0].expires_at).getTime();
+
+    if (expiry <= today) return redirect(request, "/auth/signin");
   }
 
   if (user) {

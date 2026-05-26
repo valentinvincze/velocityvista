@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type SignUpFormProps = {
   options: Option[];
@@ -31,6 +31,14 @@ export interface ILogSale {
   closing_date: string;
 }
 
+export interface ICreateDivision {
+  div_name: string;
+}
+
+export interface ISendToken {
+  emailAddress: string;
+}
+
 export type AuthState = {
   success: boolean;
   error: string;
@@ -57,7 +65,7 @@ export type NavbarProps = {
 export type ModalProps = {
   trigger: ReactNode;
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   children: ReactNode;
 };
 
@@ -78,6 +86,27 @@ export type LChartProps = {
   lastDayCount: number;
 }[];
 
+export type PanelControlProps = {
+  role: string;
+  divisions: Divisions;
+  profiles: ProfileData;
+  divProfiles: ProfileData;
+};
+
+export type PanelTableProps = {
+  profiles: ProfileData;
+  divProfiles: ProfileData;
+  userRole: string;
+  start: number;
+  end: number;
+  currentPageNum: number;
+  setCurrentPageNum: Dispatch<SetStateAction<number>>;
+  totalPageNumP: number;
+  totalPageNumDP: number;
+  totalUserCountP: number;
+  totalUserCountDP: number;
+};
+
 export type userData =
   | {
       full_name: string;
@@ -86,3 +115,21 @@ export type userData =
   | undefined;
 
 export type Sales = ILogSale[] | null;
+
+export type ProfileData =
+  | {
+      id: string;
+      full_name: string;
+      email: string;
+      role: "coo" | "admin" | "rep";
+      created_at: string;
+      division_id: string | null;
+    }[]
+  | null;
+
+type Divisions =
+  | {
+      id: string;
+      name: string;
+    }[]
+  | null;

@@ -12,7 +12,10 @@ export const signInUser = async (
   const supabase = await createClient();
 
   try {
-    const { error } = await supabase.auth.signInWithPassword({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email: data.emailAddress.toLowerCase(),
       password: data.password,
     });
@@ -33,9 +36,11 @@ export const signInUser = async (
       }
     }
 
-    redirect("/dashboard");
+    const role = user?.user_metadata?.role;
+
+    role === "rep" ? redirect("/dashboard") : redirect("/dashboard/admin");
+    return null;
   } catch (error) {
-    // Unexpected error
     if (isRedirectError(error)) throw error;
     if (error instanceof Error) {
       console.error("Unexpected error during sign in:", error.message);

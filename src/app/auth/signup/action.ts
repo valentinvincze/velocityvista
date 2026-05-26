@@ -43,7 +43,6 @@ export const signUpNewUser = async (
 
     redirect("/dashboard");
   } catch (error) {
-    // Unexpected error
     if (isRedirectError(error)) throw error;
     if (error instanceof Error)
       console.error("Unexpected error during sign-up:", error.message);

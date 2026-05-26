@@ -1,4 +1,4 @@
-import SignInForm from "@/components/forms/SignInForm";
+import SignInForm from "@/components/form/SignInForm";
 import { MdHomeFilled } from "react-icons/md";
 import ToggleThemeBtn from "@/components/ToggleThemeBtn";
 import { createClient } from "@/lib/supabase/server";

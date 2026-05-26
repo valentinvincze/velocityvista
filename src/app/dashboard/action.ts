@@ -24,15 +24,19 @@ export const logSale = async (_prevState: unknown, data: ILogSale) => {
 
   if (!user) return { success: false, error: "Unauthorized" };
 
-  const { data: profileData } = await supabase
+  const { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .select("division_id")
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profileData?.division_id)
+    return { success: false, error: "Failed to fetch profile." };
 
   try {
     const { error } = await supabase.from("sales").insert({
       rep_id: user.id,
-      division_id: profileData?.[0]?.division_id,
+      division_id: profileData?.division_id,
       amount: parsed.data.amount,
       title: parsed.data.title,
       status: parsed.data.status,

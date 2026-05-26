@@ -160,9 +160,9 @@ export default function LogSaleModal({ trigger }: { trigger: ReactNode }) {
           aria-busy={isPending}
           className="w-full bg-black text-white border border-gray-200 font-medium rounded-lg p-2 mt-4 mb-2 cursor-pointer transition-scale duration-300 ease-out hover:scale-103 active:scale-95 dark:bg-white dark:text-black dark:border-neutral-700 dark:hover:bg-white"
         >
-          Submit Sale
+          Submit sale
         </button>
-        <span className="text-sm text-label text-center mb-4">
+        <span className="text-sm text-label text-center mb-2">
           Velocity Vista - 2026
         </span>
       </form>
