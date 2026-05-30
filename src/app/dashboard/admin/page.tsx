@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PanelCard from "@/components/card/PanelCard";
-import PanelControl from "@/components/PanelControl";
+import PanelControl from "@/components/control/PanelControl";
+import { ProfileData } from "@/types";
 
 export default async function DashAdminPage() {
   const supabase = await createClient();
@@ -16,9 +17,17 @@ export default async function DashAdminPage() {
 
   const role = user!.user_metadata.role;
 
-  const { data: profileData, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, full_name, email, role, created_at, division_id");
+  let profileData: ProfileData;
+  let profileError;
+
+  if (role === "coo") {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id, full_name, email, role, created_at, division_id");
+
+    profileData = data;
+    profileError = error;
+  }
 
   let divProfileData;
   let divProfileError;

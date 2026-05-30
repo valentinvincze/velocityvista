@@ -15,24 +15,24 @@ const divisions = [
 ];
 
 const firstNames = [
-  "James",
-  "Emma",
-  "Oliver",
-  "Sophia",
-  "Liam",
-  "Ava",
-  "Noah",
-  "Isabella",
-  "Ethan",
-  "Mia",
-  "Mason",
-  "Charlotte",
-  "Logan",
-  "Amelia",
-  "Lucas",
+  "Henry",
+  "Grace",
+  "Sebastian",
+  "Chloe",
+  "Jack",
+  "Lily",
+  "Owen",
+  "Zoe",
+  "Caleb",
+  "Nora",
+  "Ryan",
+  "Hannah",
+  "Dylan",
+  "Ella",
+  "Finn",
 ];
 
-const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Davis"];
+const lastNames = ["Taylor", "Anderson", "Thomas", "Jackson", "White"];
 
 let nameIndex = 0;
 

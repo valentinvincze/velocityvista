@@ -75,7 +75,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user) {
-    if (isAdmin && !pathname.startsWith("/dashboard/admin")) {
+    if (isAdmin && pathname === "/dashboard") {
       return redirect(request, "/dashboard/admin");
     }
 

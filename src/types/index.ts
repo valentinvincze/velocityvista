@@ -95,16 +95,52 @@ export type PanelControlProps = {
 
 export type PanelTableProps = {
   profiles: ProfileData;
-  divProfiles: ProfileData;
   userRole: string;
   start: number;
   end: number;
   currentPageNum: number;
   setCurrentPageNum: Dispatch<SetStateAction<number>>;
-  totalPageNumP: number;
-  totalPageNumDP: number;
-  totalUserCountP: number;
-  totalUserCountDP: number;
+  totalPageNum: number;
+  totalUserCount: number;
+};
+
+export type TeamControlProps = {
+  divisions: Divisions;
+  role: string;
+  profiles: RepData;
+  divProfiles: RepData;
+};
+
+export type TeamGridProps = {
+  profiles: RepData;
+  worstFiveReps: RepData;
+  userRole: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export type TeamCardProps = {
+  data: {
+    avatar_url: string | null;
+    full_name: string;
+    job_title: string;
+    division_name: string | undefined;
+    email: string;
+    sale: string | number;
+  };
+  cardStyle: string;
+  avatarInitialsStyle: string;
+  initials: string;
+  positionPillStyle?: string;
+  rankingNumbers?: string | boolean;
+  textStyles: {
+    full_name?: string;
+    job_title: string;
+    division_name: string;
+    email: string;
+    amount?: string;
+  };
+  userRole: string;
 };
 
 export type userData =
@@ -125,7 +161,8 @@ export type ProfileData =
       created_at: string;
       division_id: string | null;
     }[]
-  | null;
+  | null
+  | undefined;
 
 type Divisions =
   | {
@@ -133,3 +170,17 @@ type Divisions =
       name: string;
     }[]
   | null;
+
+export type RepData =
+  | {
+      id: string;
+      full_name: string;
+      email: string;
+      job_title: string;
+      avatar_url: string | null;
+      division_id: string;
+      sales: { sum: number }[];
+      division_name?: string;
+    }[]
+  | null
+  | undefined;

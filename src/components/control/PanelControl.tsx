@@ -2,7 +2,7 @@
 
 import { PanelControlProps } from "@/types";
 import { useState } from "react";
-import PanelTable from "./PanelTable";
+import PanelTable from "../PanelTable";
 
 export default function PanelControl({
   role,
@@ -30,34 +30,32 @@ export default function PanelControl({
     (a, b) => roleOrder[a.role] - roleOrder[b.role],
   );
 
-  const divId = divisions?.find((div) => div.name === divisionValue && div.id);
+  const divId = divisions?.find((div) => div.name === divisionValue)?.id;
 
-  const filteredProfilesData = sortedProfileData?.filter(
-    (data) =>
-      (divId
-        ? data.division_id === divId.id
-        : data.division_id || data.role === "coo") &&
-      (roleValue ? data.role === roleValue : data.role) &&
-      (searchValue ? data.email.includes(searchValue) : data.email),
-  );
-
-  const filteredDivProfilesData = sortedDivProfileData?.filter(
-    (data) =>
-      (divId ? data.division_id === divId?.id : data.division_id) &&
-      (roleValue ? data.role === roleValue : data.role) &&
-      (searchValue ? data.email.includes(searchValue) : data.email),
-  );
+  const filteredProfilesData =
+    role === "coo"
+      ? sortedProfileData?.filter(
+          (data) =>
+            (divId
+              ? data.division_id === divId
+              : data.division_id || data.role === "coo") &&
+            (roleValue ? data.role === roleValue : data.role) &&
+            (searchValue ? data.email.includes(searchValue) : data.email),
+        )
+      : sortedDivProfileData?.filter(
+          (data) =>
+            (roleValue ? data.role === roleValue : data.role) &&
+            (searchValue ? data.email.includes(searchValue) : data.email),
+        );
 
   const pageSize = 7;
 
   const start = (currentPageNum - 1) * pageSize;
   const end = currentPageNum * pageSize;
 
-  const totalPageNumP = Math.ceil(filteredProfilesData.length / pageSize);
-  const totalPageNumDP = Math.ceil(filteredDivProfilesData.length / pageSize);
+  const totalPageNum = Math.ceil(filteredProfilesData.length / pageSize);
 
-  const totalUserCountP = filteredProfilesData.length;
-  const totalUserCountDP = filteredDivProfilesData.length;
+  const totalUserCount = filteredProfilesData.length;
 
   return (
     <>
@@ -75,7 +73,7 @@ export default function PanelControl({
         {role === "coo" && (
           <select
             id="division-select"
-            className="w-[157px] bg-card appearance-none border border-gray-200 rounded-lg px-6 py-1 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300 dark:border-neutral-700 dark:text-white dark:focus:ring-neutral-500 dark:focus:border-neutral-600 text-center"
+            className="bg-card appearance-none border border-gray-200 rounded-lg px-6 py-1 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300 dark:border-neutral-700 dark:text-white dark:focus:ring-neutral-500 dark:focus:border-neutral-600 text-center"
             defaultValue=""
             onChange={(e) => {
               setDivisionValue(e.target.value);
@@ -88,7 +86,7 @@ export default function PanelControl({
         )}
         <select
           id="role-select"
-          className="w-[157px] bg-card appearance-none border border-gray-200 rounded-lg px-6 py-1 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300 dark:border-neutral-700 dark:text-white dark:focus:ring-neutral-500 dark:focus:border-neutral-600 text-center"
+          className="w-[210px] bg-card appearance-none border border-gray-200 rounded-lg px-6 py-1 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300 dark:border-neutral-700 dark:text-white dark:focus:ring-neutral-500 dark:focus:border-neutral-600 text-center"
           defaultValue=""
           onChange={(e) => {
             setRoleValue(e.target.value);
@@ -103,16 +101,13 @@ export default function PanelControl({
       </div>
       <PanelTable
         profiles={filteredProfilesData.slice(start, end)}
-        divProfiles={filteredDivProfilesData.slice(start, end)}
         userRole={role}
         start={start}
         end={end}
         currentPageNum={currentPageNum}
         setCurrentPageNum={setCurrentPageNum}
-        totalPageNumP={totalPageNumP}
-        totalPageNumDP={totalPageNumDP}
-        totalUserCountP={totalUserCountP}
-        totalUserCountDP={totalUserCountDP}
+        totalPageNum={totalPageNum}
+        totalUserCount={totalUserCount}
       />
     </>
   );

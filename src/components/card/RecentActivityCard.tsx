@@ -26,12 +26,8 @@ export default function RecentActivity({ sales }: { sales: Sales }) {
     const secured = sale.status === "secured";
 
     const statusStyle = clsx({
-      "bg-emerald-700/20": secured,
-      "text-emerald-700": secured,
-      "w-[85px]": secured,
-      "bg-red-700/20": !secured,
-      "text-red-700": !secured,
-      "w-[55px]": !secured,
+      "bg-emerald-700/20 text-emerald-700 w-[85px]": secured,
+      "bg-red-700/20 text-red-700 w-[55px]": !secured,
     });
 
     const statusText = `${sale.status.charAt(0).toUpperCase()}${sale.status.slice(1)}`;

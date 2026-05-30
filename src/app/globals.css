@@ -6,6 +6,22 @@
   @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }
 
+@utility scrollbar {
+  @apply [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [scrollbar-width:thin];
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #e5e7eb;
+  }
+  scrollbar-color: #e5e7eb transparent;
+
+  &:where(.dark, .dark *) {
+    &::-webkit-scrollbar-thumb {
+      background-color: #525252;
+    }
+    scrollbar-color: #525252 transparent;
+  }
+}
+
 @theme {
   --color-page: #faf9f5;
   --color-form: #ffffff;

@@ -14,17 +14,13 @@ export default function GlanceBar({ sales }: { sales: Sales }) {
   const lost = sales?.length && currentWeekLost !== 0;
 
   const securedBarStyle = clsx({
-    "bg-gray-400": !secured,
-    "dark:bg-neutral-600": !secured,
-    "bg-emerald-600": secured,
-    "dark:bg-emerald-800": secured,
+    "bg-gray-400 dark:bg-neutral-600": !secured,
+    "bg-emerald-600 dark:bg-emerald-800": secured,
   });
 
   const lostBarStyle = clsx({
-    "bg-gray-400": !lost,
-    "dark:bg-neutral-600": !lost,
-    "bg-red-600": lost,
-    "dark:bg-red-800": lost,
+    "bg-gray-400 dark:bg-neutral-600": !lost,
+    "bg-red-600 dark:bg-red-800": lost,
   });
 
   return (
