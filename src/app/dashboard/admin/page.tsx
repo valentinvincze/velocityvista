@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import PanelCard from "@/components/card/PanelCard";
 import PanelControl from "@/components/control/PanelControl";
-import { ProfileData } from "@/types";
+import { Divisions, ProfileData } from "@/types";
 
 export default async function DashAdminPage() {
   const supabase = await createClient();
@@ -33,18 +33,24 @@ export default async function DashAdminPage() {
   let divProfileError;
 
   if (role === "admin") {
-    const { data: profileData, error: profileError } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("id, full_name, email, role, created_at, division_id")
       .eq("division_id", user.user_metadata.division_id);
 
-    divProfileData = profileData;
-    divProfileError = profileError;
+    divProfileData = data;
+    divProfileError = error;
   }
 
-  const { data: divs, error: divisionError } = await supabase
-    .from("divisions")
-    .select("name, id");
+  let divsData: Divisions;
+  let divsError;
+
+  if (role === "coo") {
+    const { data, error } = await supabase.from("divisions").select("name, id");
+
+    divsData = data;
+    divsError = error;
+  }
 
   if (profileError) {
     console.error("Error fetching profiles:", profileError.message);
@@ -57,8 +63,8 @@ export default async function DashAdminPage() {
     );
   }
 
-  if (divisionError) {
-    console.error("Error fetching divisions:", divisionError.message);
+  if (divsError) {
+    console.error("Error fetching divisions:", divsError.message);
   }
 
   const totalUsersAsCoo = profileData?.length ?? 0;
@@ -74,7 +80,7 @@ export default async function DashAdminPage() {
   const totalRepsAsAdmin =
     divProfileData?.filter((role) => role.role === "rep").length ?? 0;
 
-  const divisions = divs?.length ?? 0;
+  const divisions = divsData?.length ?? 0;
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -96,7 +102,7 @@ export default async function DashAdminPage() {
         </div>
         <PanelControl
           role={role}
-          divisions={divs}
+          divisions={divsData}
           profiles={profileData}
           divProfiles={divProfileData ?? []}
         />

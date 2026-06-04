@@ -3,6 +3,7 @@
 import { PanelControlProps } from "@/types";
 import { useState } from "react";
 import PanelTable from "../PanelTable";
+import { ProfileData } from "@/types";
 
 export default function PanelControl({
   role,
@@ -22,6 +23,7 @@ export default function PanelControl({
   ));
 
   const roleOrder = { coo: 0, admin: 1, rep: 2 };
+
   const sortedProfileData = [...(profiles ?? [])].sort(
     (a, b) => roleOrder[a.role] - roleOrder[b.role],
   );
@@ -47,6 +49,19 @@ export default function PanelControl({
             (roleValue ? data.role === roleValue : data.role) &&
             (searchValue ? data.email.includes(searchValue) : data.email),
         );
+
+  const addDivName = (data: ProfileData) =>
+    data?.map((data) => {
+      const name =
+        data.division_id &&
+        divisions?.find((div) => div.id === data.division_id)?.name;
+      return {
+        ...data,
+        division_name: name || "",
+      };
+    }) ?? [];
+
+  const profilesWithDivName = addDivName(filteredProfilesData);
 
   const pageSize = 7;
 
@@ -100,7 +115,7 @@ export default function PanelControl({
         </select>
       </div>
       <PanelTable
-        profiles={filteredProfilesData.slice(start, end)}
+        profiles={profilesWithDivName.slice(start, end)}
         userRole={role}
         start={start}
         end={end}

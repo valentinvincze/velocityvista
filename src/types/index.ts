@@ -80,7 +80,7 @@ export type StatCardProps = {
   when: string;
 };
 
-export type LChartProps = {
+export type PLChartProps = {
   label: string;
   currentDayCount: number;
   lastDayCount: number;
@@ -107,6 +107,7 @@ export type PanelTableProps = {
 export type TeamControlProps = {
   divisions: Divisions;
   role: string;
+  id: string;
   profiles: RepData;
   divProfiles: RepData;
 };
@@ -117,6 +118,8 @@ export type TeamGridProps = {
   userRole: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  qualifiedReps: RepData;
+  profilesWithDivName: RepData;
 };
 
 export type TeamCardProps = {
@@ -143,6 +146,21 @@ export type TeamCardProps = {
   userRole: string;
 };
 
+export type LeaderboardControlProps = {
+  divisions: Divisions;
+  role: string;
+  userId: string;
+  profiles: RepData;
+  divProfiles: RepData;
+};
+
+export type LB5BChartProps = {
+  label: string;
+  amount: number;
+}[];
+
+export type LW5BChartProps = LB5BChartProps;
+
 export type userData =
   | {
       full_name: string;
@@ -154,6 +172,7 @@ export type Sales = ILogSale[] | null;
 
 export type ProfileData =
   | {
+      division_name: string;
       id: string;
       full_name: string;
       email: string;
@@ -164,12 +183,13 @@ export type ProfileData =
   | null
   | undefined;
 
-type Divisions =
+export type Divisions =
   | {
       id: string;
       name: string;
     }[]
-  | null;
+  | null
+  | undefined;
 
 export type RepData =
   | {
@@ -179,7 +199,7 @@ export type RepData =
       job_title: string;
       avatar_url: string | null;
       division_id: string;
-      sales: { sum: number }[];
+      sales: { sum: number | null }[];
       division_name?: string;
     }[]
   | null

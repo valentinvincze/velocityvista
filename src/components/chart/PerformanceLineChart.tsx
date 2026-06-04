@@ -6,7 +6,7 @@ import {
   YAxis,
   Line,
 } from "recharts";
-import { LChartProps } from "@/types";
+import { PLChartProps } from "@/types";
 
 function CustomLabel({
   cx,
@@ -44,7 +44,7 @@ function CustomLabel({
   );
 }
 
-export default function LChart({ entries }: { entries: LChartProps }) {
+export default function PLChart({ entries }: { entries: PLChartProps }) {
   return (
     <ResponsiveContainer width="100%" height="100%" debounce={1}>
       <LineChart data={entries} margin={{ left: 15, right: 10, top: 20 }}>
@@ -70,12 +70,12 @@ export default function LChart({ entries }: { entries: LChartProps }) {
         <Line
           type="monotone"
           dataKey="currentDayCount"
-          stroke="var(--color-chart-line)"
+          stroke="var(--color-pchart-line)"
           strokeWidth={4}
           dot={false}
           activeDot={
             <CustomLabel
-              stroke="var(--color-chart-line)"
+              stroke="var(--color-pchart-line)"
               offset={10}
               entries={entries}
             />
@@ -84,12 +84,12 @@ export default function LChart({ entries }: { entries: LChartProps }) {
         <Line
           type="monotone"
           dataKey="lastDayCount"
-          stroke="var(--color-chart-line-muted)"
+          stroke="var(--color-pchart-line-muted)"
           strokeWidth={4}
           dot={false}
           activeDot={
             <CustomLabel
-              stroke="var(--color-chart-line-muted)"
+              stroke="var(--color-pchart-line-muted)"
               offset={25}
               entries={entries}
             />

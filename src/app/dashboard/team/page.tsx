@@ -14,6 +14,7 @@ export default async function DashTeamPage() {
   }
 
   const role = user!.user_metadata.role;
+  const id = user.id;
 
   const today = new Date();
 
@@ -40,7 +41,7 @@ export default async function DashTeamPage() {
   let divProfileError;
 
   if (role === "admin" || role === "rep") {
-    const { data: profileData, error: profileError } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select(
         "id, full_name, email, job_title, avatar_url, division_id, sales(amount.sum())",
@@ -50,11 +51,11 @@ export default async function DashTeamPage() {
       .eq("division_id", user.user_metadata.division_id)
       .eq("role", "rep");
 
-    divProfileData = profileData;
-    divProfileError = profileError;
+    divProfileData = data;
+    divProfileError = error;
   }
 
-  const { data: divs, error: divisionError } = await supabase
+  const { data: divsData, error: divsError } = await supabase
     .from("divisions")
     .select("name, id");
 
@@ -69,15 +70,16 @@ export default async function DashTeamPage() {
     );
   }
 
-  if (divisionError) {
-    console.error("Error fetching divisions:", divisionError.message);
+  if (divsError) {
+    console.error("Error fetching divisions:", divsError.message);
   }
 
   return (
     <section className="p-8">
       <TeamControl
-        divisions={divs}
+        divisions={divsData}
         role={role}
+        id={id}
         profiles={profileData}
         divProfiles={divProfileData ?? []}
       />

@@ -4,7 +4,7 @@ import PerformanceCard from "@/components/card/PerformanceCard";
 import Statistics from "@/components/Statistics";
 import GlanceBar from "@/components/GlanceBar";
 import RecentActivity from "@/components/card/RecentActivityCard";
-import PerformanceChart from "@/components/chart/PerformanceChart";
+import PerformanceChartControl from "@/components/control/PerformanceChartControl";
 
 export default async function Dashboard() {
   const supabase = await createClient();
@@ -50,7 +50,7 @@ export default async function Dashboard() {
         <Statistics sales={sales} lastSales={lastSales} />
         <GlanceBar sales={sales} />
         <RecentActivity sales={sales} />
-        <PerformanceChart sales={sales} lastSales={lastSales} />
+        <PerformanceChartControl sales={sales} lastSales={lastSales} />
       </section>
     </div>
   );

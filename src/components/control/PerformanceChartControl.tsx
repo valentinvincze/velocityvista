@@ -4,9 +4,9 @@ import { useState } from "react";
 import clsx from "clsx";
 import { Sales } from "@/types";
 import weeklyCalc from "@/lib/utils/weeklyCalc";
-import LChart from "./LineChart";
+import PLChart from "../chart/PerformanceLineChart";
 
-export default function PerformanceChart({
+export default function PerformanceChartControl({
   sales,
   lastSales,
 }: {
@@ -146,9 +146,9 @@ export default function PerformanceChart({
       </div>
       <div className="flex-1 min-h-0">
         {defaultDisplay === "weekly" ? (
-          <LChart entries={weeklyEntries} />
+          <PLChart entries={weeklyEntries} />
         ) : (
-          <LChart entries={monthlyEntries} />
+          <PLChart entries={monthlyEntries} />
         )}
       </div>
     </div>

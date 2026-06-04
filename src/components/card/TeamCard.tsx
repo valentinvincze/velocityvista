@@ -12,7 +12,7 @@ export default function TeamCard({
 }: TeamCardProps) {
   return (
     <div
-      className={`bg-card rounded-3xl border border-gray-200 dark:border-neutral-700 ${cardStyle} flex flex-col gap-8 p-8 transition-scale duration-300 ease-out hover:scale-102`}
+      className={`rounded-3xl border border-gray-200 dark:border-neutral-700 ${cardStyle} flex flex-col gap-8 p-8 transition-scale duration-300 ease-out hover:scale-102`}
     >
       <div className="flex justify-between items-center">
         <span
@@ -50,7 +50,9 @@ export default function TeamCard({
           <span className={`font-medium mt-2 ${textStyles.amount}`}>
             {data.sale}
           </span>
-        ) : null}
+        ) : (
+          <div className="h-9"></div>
+        )}
       </div>
     </div>
   );

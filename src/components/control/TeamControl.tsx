@@ -4,10 +4,12 @@ import { useState } from "react";
 import clsx from "clsx";
 import type { TeamControlProps, RepData } from "@/types";
 import TeamGrid from "../TeamGrid";
+import { FaArrowDownLong } from "react-icons/fa6";
 
 export default function TeamControl({
   divisions,
   role,
+  id,
   profiles,
   divProfiles,
 }: TeamControlProps) {
@@ -39,14 +41,14 @@ export default function TeamControl({
   const sortedProfiles =
     profiles !== null
       ? [...(profiles ?? [])].sort(
-          (a, b) => b?.sales[0]?.sum - a?.sales[0]?.sum,
+          (a, b) => (b?.sales[0]?.sum ?? 0) - (a?.sales[0]?.sum ?? 0),
         )
       : [];
 
   const sortedDivProfiles =
     divProfiles !== null
       ? [...(divProfiles ?? [])].sort(
-          (a, b) => b?.sales[0]?.sum - a?.sales[0]?.sum,
+          (a, b) => (b?.sales[0]?.sum ?? 0) - (a?.sales[0]?.sum ?? 0),
         )
       : [];
 
@@ -55,6 +57,12 @@ export default function TeamControl({
   const filteredProfiles = sortedProfiles.filter((data) =>
     divId ? data.division_id === divId : data.division_id,
   );
+
+  const userCard = divProfiles?.find((data) => data.id === id);
+
+  const rest = divProfiles?.filter((data) => data.id !== id) ?? [];
+
+  const repProfiles = userCard ? [userCard, ...rest] : divProfiles;
 
   const addDivName = (data: RepData) =>
     data?.map((data) => {
@@ -72,9 +80,33 @@ export default function TeamControl({
       ? addDivName(filteredProfiles)
       : role === "admin"
         ? addDivName(sortedDivProfiles)
-        : addDivName(divProfiles);
+        : addDivName(repProfiles);
 
   const userCount = profilesWithDivName.length || 0;
+
+  const qualifiedReps = profilesWithDivName.filter(
+    (data) => (data.sales[0].sum ?? 0) > 0,
+  );
+
+  const zeroReps = profilesWithDivName.filter(
+    (data) => data.sales[0].sum === null,
+  );
+
+  const worstFiveReps =
+    qualifiedReps.length >= Math.floor(profilesWithDivName.length / 2) &&
+    zeroReps.length >= 5
+      ? profilesWithDivName.slice(-zeroReps.length)
+      : qualifiedReps.length >= Math.floor(profilesWithDivName.length / 2)
+        ? profilesWithDivName.slice(-5)
+        : [];
+
+  const bestFiveReps =
+    qualifiedReps.length >= Math.floor(profilesWithDivName.length / 2) &&
+    zeroReps.length >= 5
+      ? profilesWithDivName.slice(0, -zeroReps.length)
+      : qualifiedReps.length >= Math.floor(profilesWithDivName.length / 2)
+        ? profilesWithDivName.slice(0, -5)
+        : profilesWithDivName;
 
   return (
     <section className="flex flex-col gap-10 min-h-0">
@@ -103,20 +135,34 @@ export default function TeamControl({
             </button>
           )}
         </div>
-        <span className="text-label">{userCount} users</span>
+        <div className="flex gap-4">
+          <span className="text-label">{userCount} users</span>
+          <div className="flex items-center text-red-500">
+            {role !== "rep" &&
+              qualifiedReps.length >=
+                Math.floor(profilesWithDivName.length / 2) && (
+                <>
+                  <span>Needs attention</span>
+                  <FaArrowDownLong className="w-4 h-4" />
+                </>
+              )}
+          </div>
+        </div>
       </div>
       <div className="relative">
         <div className="grid grid-cols-3 gap-8 h-[770px] overflow-y-auto no-scrollbar scroll-smooth min-h-0">
           <TeamGrid
             profiles={
-              role === "rep"
+              role === "rep" || qualifiedReps.length <= 5
                 ? profilesWithDivName
-                : profilesWithDivName.slice(0, -5)
+                : bestFiveReps
             }
-            worstFiveReps={profilesWithDivName.slice(-5)}
+            worstFiveReps={worstFiveReps}
             userRole={role}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
+            qualifiedReps={qualifiedReps}
+            profilesWithDivName={profilesWithDivName}
           />
         </div>
         <div className="absolute bottom-0 bg-gradient-to-b from-transparent to-page h-10 w-full"></div>

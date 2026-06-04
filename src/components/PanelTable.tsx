@@ -32,22 +32,29 @@ export default function PanelTable({
         rep,
     });
 
+    const parts = data?.division_name?.split(" ") ?? [];
+    const formatted =
+      parts.length > 1
+        ? `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`
+        : parts[0];
+
     return (
       <div key={data.id}>
         <div className="flex items-center px-4 h-[60px]">
-          <p className="text-label grow text-xs basis-1/5">{data.email}</p>
-          <p className="grow text-sm basis-1/5 dark:text-white">
+          <p className="text-label grow text-xs basis-1/6">{data.email}</p>
+          <p className="grow text-sm basis-1/6 dark:text-white">
             {data.full_name}
           </p>
-          <p className="text-label grow text-xs basis-1/5">
+          <p className="text-label grow text-xs basis-1/6">
             <span className={`${rolePill} uppercase`}>{data.role}</span>
           </p>
-          <p className="text-label grow text-xs basis-1/5">
+          <p className="text-label grow text-xs basis-1/6">
             {dateOfJoin.format(new Date(data.created_at))}
           </p>
+          <p className="text-label grow text-xs basis-1/6">{formatted}</p>
           {(userRole === "coo" && !coo) || (userRole === "admin" && !admin) ? (
             <button
-              className="grow basis-1/5 mr-auto text-right"
+              className="grow basis-1/6 text-right"
               onClick={async () => await terminateContract(data.id)}
             >
               <span className="p-2 rounded-lg border border-red-300 text-red-500 dark:border-red-500 dark:text-red-700 ml-auto text-sm font-semibold cursor-pointer hover:bg-red-300/10 dark:hover:bg-red-600/10">
@@ -55,7 +62,7 @@ export default function PanelTable({
               </span>
             </button>
           ) : (
-            <div className="basis-1/5"></div>
+            <div className="basis-1/6 grow"></div>
           )}
         </div>
         <hr className="border-gray-100 dark:border-neutral-800" />
@@ -78,7 +85,7 @@ export default function PanelTable({
   });
 
   const disabledLeft = currentPageNum === 1;
-  const disabledRight = currentPageNum === totalPageNum;
+  const disabledRight = currentPageNum === totalPageNum || totalPageNum === 0;
 
   const leftDisabledStyle = clsx({
     "cursor-not-allowed opacity-40": disabledLeft,
@@ -91,11 +98,14 @@ export default function PanelTable({
   return (
     <div className="flex-1 flex flex-col bg-card border border-gray-200 rounded-3xl dark:border-neutral-700 min-h-0">
       <div className="flex p-5">
-        <h4 className="text-label uppercase grow text-sm basis-1/5">Email</h4>
-        <h4 className="text-label uppercase grow text-sm basis-1/5"> Name</h4>
-        <h4 className="text-label uppercase grow text-sm basis-1/5">Role</h4>
-        <h4 className="text-label uppercase grow text-sm basis-1/5">Joined</h4>
-        <div className="grow basis-1/5"></div>
+        <h4 className="text-label uppercase grow text-sm basis-1/6">Email</h4>
+        <h4 className="text-label uppercase grow text-sm basis-1/6"> Name</h4>
+        <h4 className="text-label uppercase grow text-sm basis-1/6">Role</h4>
+        <h4 className="text-label uppercase grow text-sm basis-1/6">Joined</h4>
+        <h4 className="text-label uppercase grow text-sm basis-1/6">
+          Division
+        </h4>
+        <div className="grow basis-1/6"></div>
       </div>
       <hr className="border-gray-200 dark:border-neutral-700" />
       <section className="flex-1">{table}</section>
@@ -128,6 +138,7 @@ export default function PanelTable({
               className={`h-8 w-7 border border-gray-200 dark:border-neutral-700 text-label text-xs rounded-lg ${nextActiveStyle}`}
               onClick={() =>
                 currentPageNum < totalPageNum &&
+                currentPageNum !== windowStart + 1 &&
                 setCurrentPageNum((prevPageNum) => prevPageNum + 1)
               }
             >
