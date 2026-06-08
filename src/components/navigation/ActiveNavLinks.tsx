@@ -48,17 +48,7 @@ export default function ActiveNavLinks({ role }: { role: string }) {
           </NavLink>
         </ul>
       </div>
-      <div className="flex flex-col gap-2 border-t border-t-gray-200 px-3 py-2 dark:border-t-neutral-800">
-        <ul>
-          <NavLink
-            href="/dashboard/settings"
-            isActive={pathname === "/dashboard/settings"}
-            icon={<RiSettings5Line />}
-          >
-            Settings
-          </NavLink>
-        </ul>
-
+      <div className="border-t border-t-gray-200 px-3 py-5 dark:border-t-neutral-800">
         <SignOutBtn icon={<IoIosLogOut />} />
       </div>
     </div>

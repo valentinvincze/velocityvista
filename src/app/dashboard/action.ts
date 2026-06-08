@@ -48,7 +48,7 @@ export const logSale = async (_prevState: unknown, data: ILogSale) => {
       return { success: false, error: "Failed to log sale." };
     }
 
-    revalidatePath("/dashboard");
+    revalidatePath("/dashboard", "layout");
     return { success: true };
   } catch (error) {
     if (error instanceof Error)

@@ -157,6 +157,7 @@ export type LeaderboardControlProps = {
 export type LB5BChartProps = {
   label: string;
   amount: number;
+  avatar_url: string | null;
 }[];
 
 export type LW5BChartProps = LB5BChartProps;
@@ -165,14 +166,16 @@ export type userData =
   | {
       full_name: string;
       job_title: string;
+      avatar_url: string;
     }
-  | undefined;
+  | undefined
+  | null;
 
 export type Sales = ILogSale[] | null;
 
 export type ProfileData =
   | {
-      division_name: string;
+      division_name?: string;
       id: string;
       full_name: string;
       email: string;

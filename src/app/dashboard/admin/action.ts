@@ -29,7 +29,7 @@ export const logDivision = async (
       return { success: false, error: "Failed to add division." };
     }
 
-    revalidatePath("/dashboard/admin");
+    revalidatePath("/dashboard", "layout");
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
@@ -72,11 +72,21 @@ export const sendToken = async (_prevState: unknown, data: ISendToken) => {
       return { success: false, error: "Failed to add invite." };
     }
 
+    const signupUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/signup?token=${invite[0].token}`;
+
     const { error: resendError } = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: data.emailAddress,
-      subject: "Invite token",
-      html: `<p>${invite[0].token}<br/ ><strong>Token can only be used for 24 hours!</strong></p>`,
+      subject: "Velocity Vista — Signup Access",
+      html: `
+        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;color:#111;">
+          <p style="margin:0 0 8px 0;font-size:14px;">Your signup token:</p>
+          <p style="margin:0 0 24px 0;font-size:16px;font-weight:600;letter-spacing:0.5px;">${invite[0].token}</p>
+          <p style="margin:0 0 8px 0;font-size:14px;">Use the link below to access the signup page — the token is pre-filled:</p>
+          <a href="${signupUrl}" style="display:inline-block;font-size:13px;color:#555;word-break:break-all;margin-bottom:24px;">${signupUrl}</a>
+          <p style="margin:0;font-size:13px;font-weight:600;color:#cc0000;">This token expires in 24 hours.</p>
+        </div>
+      `,
     });
 
     if (resendError) {
@@ -84,7 +94,7 @@ export const sendToken = async (_prevState: unknown, data: ISendToken) => {
       return { success: false, error: "Failed to send invite token." };
     }
 
-    revalidatePath("/dashboard/admin");
+    revalidatePath("/dashboard", "layout");
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {

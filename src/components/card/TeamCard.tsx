@@ -15,11 +15,18 @@ export default function TeamCard({
       className={`rounded-3xl border border-gray-200 dark:border-neutral-700 ${cardStyle} flex flex-col gap-8 p-8 transition-scale duration-300 ease-out hover:scale-102`}
     >
       <div className="flex justify-between items-center">
-        <span
-          className={`rounded-full w-15 h-15 text-lg flex items-center justify-center ${avatarInitialsStyle}`}
-        >
-          {data.avatar_url ? data.avatar_url : initials}
-        </span>
+        {data.avatar_url ? (
+          <img
+            src={`${data.avatar_url}`}
+            className="rounded-full w-15 h-15"
+          ></img>
+        ) : (
+          <span
+            className={`rounded-full w-15 h-15 text-lg flex items-center justify-center ${avatarInitialsStyle}`}
+          >
+            {initials}
+          </span>
+        )}
         {userRole !== "rep" ? (
           <span className={`${positionPillStyle ?? ""} `}>
             {rankingNumbers ?? ""}

@@ -25,7 +25,7 @@ export default async function DashboardLayout({
   try {
     const { data, error } = await supabase
       .from("profiles")
-      .select("full_name, job_title")
+      .select("full_name, job_title, avatar_url")
       .eq("id", user!.id)
       .single();
 
@@ -54,11 +54,13 @@ export default async function DashboardLayout({
     year: "numeric",
   }).format(today);
 
+  const avatar_url = userData?.avatar_url;
+
   return (
     <main className="h-full w-full flex">
       <aside className="w-72">
         <Navbar
-          avatar={<Avatar initials={avatarInitials} />}
+          avatar={<Avatar initials={avatarInitials} avatar_url={avatar_url} />}
           name={formatted}
           jobtitle={userData?.job_title ?? ""}
           role={role}
@@ -103,7 +105,7 @@ export default async function DashboardLayout({
                 </>
               )
             )}
-            <Avatar initials={avatarInitials} />
+            <Avatar avatar_url={avatar_url} initials={avatarInitials} />
           </div>
         </header>
         {children}

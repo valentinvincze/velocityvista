@@ -75,7 +75,11 @@ export default function LeaderboardControl({
   const bestFiveRepsEntries =
     bestFiveReps.length === 5
       ? bestFiveReps.map((data) => {
-          return { label: data.full_name, amount: data.sales[0]?.sum ?? 0 };
+          return {
+            label: data.full_name,
+            amount: data.sales[0]?.sum ?? 0,
+            avatar_url: data.avatar_url,
+          };
         })
       : [];
 
@@ -89,7 +93,11 @@ export default function LeaderboardControl({
   const worstFiveRepsEntries =
     sortedWorstFiveReps.length === 5
       ? sortedWorstFiveReps.map((data) => {
-          return { label: data.full_name, amount: data.sales[0]?.sum ?? 0 };
+          return {
+            label: data.full_name,
+            amount: data.sales[0]?.sum ?? 0,
+            avatar_url: data.avatar_url,
+          };
         })
       : [];
 

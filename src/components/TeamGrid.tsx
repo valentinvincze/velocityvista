@@ -58,7 +58,8 @@ export default function TeamGrid({
     const avatarInitials = !data.avatar_url;
 
     const avatarInitialsStyle = clsx("text-lg font-semibold", {
-      "bg-svg text-placeholder": avatarInitials && index !== 0,
+      "bg-svg text-placeholder":
+        avatarInitials && (index !== 0 || userRole !== "rep"),
       "bg-white text-black dark:bg-black dark:text-white":
         index === 0 && userRole === "rep" && avatarInitials,
     });

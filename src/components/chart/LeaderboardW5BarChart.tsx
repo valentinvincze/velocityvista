@@ -46,6 +46,53 @@ function CustomBar({
   );
 }
 
+function CustomBarLabel({
+  x,
+  y,
+  width,
+  index,
+  entries,
+}: {
+  x?: number;
+  y?: number;
+  width?: number;
+  index?: number;
+  entries: LW5BChartProps;
+}) {
+  if (
+    x === undefined ||
+    y === undefined ||
+    width === undefined ||
+    index === undefined
+  )
+    return null;
+
+  const parts = entries[index].label.split(" ");
+  const initials =
+    parts.length > 1
+      ? `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`
+      : parts[0].charAt(0);
+
+  const size = 36;
+  const avatarX = x + width / 2 - size / 2;
+  const avatarY = y - size - 10;
+
+  return (
+    <foreignObject x={avatarX} y={avatarY} width={size} height={size}>
+      {entries[index].avatar_url ? (
+        <img
+          src={`${entries[index].avatar_url}`}
+          className="rounded-full w-9 h-9"
+        ></img>
+      ) : (
+        <div className="rounded-full bg-svg text-placeholder w-9 h-9 text-xs font-semibold flex items-center justify-center">
+          {initials}
+        </div>
+      )}
+    </foreignObject>
+  );
+}
+
 export default function LW5BChart({ entries }: { entries: LW5BChartProps }) {
   return (
     <ResponsiveContainer width="100%" height="100%" debounce={1}>
@@ -70,7 +117,11 @@ export default function LW5BChart({ entries }: { entries: LW5BChartProps }) {
           tick={{ fill: "var(--color-label)", fontSize: 12 }}
           tickFormatter={(num: number) => format(num)}
         />
-        <Bar dataKey="amount" shape={<CustomBar />} />
+        <Bar
+          dataKey="amount"
+          label={<CustomBarLabel entries={entries} />}
+          shape={<CustomBar />}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

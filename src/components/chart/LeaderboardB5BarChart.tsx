@@ -79,9 +79,16 @@ function CustomBarLabel({
 
   return (
     <foreignObject x={avatarX} y={avatarY} width={size} height={size}>
-      <div className="rounded-full bg-svg text-placeholder w-9 h-9 text-xs font-semibold flex items-center justify-center">
-        {initials}
-      </div>
+      {entries[index].avatar_url ? (
+        <img
+          src={`${entries[index].avatar_url}`}
+          className="rounded-full w-9 h-9"
+        ></img>
+      ) : (
+        <div className="rounded-full bg-svg text-placeholder w-9 h-9 text-xs font-semibold flex items-center justify-center">
+          {initials}
+        </div>
+      )}
     </foreignObject>
   );
 }
