@@ -107,7 +107,7 @@ export default function LB5BChart({ entries }: { entries: LB5BChartProps }) {
           dataKey="label"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "var(--color-label)", fontSize: 12, dy: 12 }}
+          tick={{ fill: "var(--color-label)", fontSize: 12, dy: 8 }}
         />
         <YAxis
           allowDecimals={false}

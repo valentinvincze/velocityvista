@@ -159,13 +159,7 @@ export default function LeaderboardControl({
                   Worst Five
                 </button>
               </div>
-            ) : (
-              <span className="text-label text-sm">
-                You are ranked{" "}
-                <span className={positionStyle}>#{repPosition}</span> out of{" "}
-                {sortedDivProfiles.length} users
-              </span>
-            )}
+            ) : null}
           </div>
           <div className={role === "coo" ? "h-[620px]" : "h-[700px]"}>
             {bestWorstBtn === "best" || role === "rep" ? (

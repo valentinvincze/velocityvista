@@ -96,7 +96,7 @@ function CustomBarLabel({
 export default function LW5BChart({ entries }: { entries: LW5BChartProps }) {
   return (
     <ResponsiveContainer width="100%" height="100%" debounce={1}>
-      <BarChart data={entries} margin={{ left: 15, right: 10, top: 20 }}>
+      <BarChart data={entries} margin={{ left: 15, right: 10, top: 56 }}>
         <CartesianGrid
           horizontal
           vertical={false}
@@ -107,7 +107,7 @@ export default function LW5BChart({ entries }: { entries: LW5BChartProps }) {
           dataKey="label"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "var(--color-label)", fontSize: 12, dy: 12 }}
+          tick={{ fill: "var(--color-label)", fontSize: 12, dy: 8 }}
         />
         <YAxis
           allowDecimals={false}

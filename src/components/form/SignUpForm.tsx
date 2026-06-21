@@ -177,7 +177,7 @@ export default function SignUpForm({ options }: SignUpFormProps) {
               </option>
               <option value="rep">Sales Rep</option>
               <option value="admin">Admin</option>
-              <option value="coo">Chief Operating Officer</option>
+              <option value="coo">Chief Operating O.</option>
             </select>
             <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
               <TiArrowSortedDown className="w-4 h-4 fill-gray-500 dark:fill-gray-400" />
@@ -189,17 +189,17 @@ export default function SignUpForm({ options }: SignUpFormProps) {
             </span>
           )}
           {role === "rep" && (
-            <span className="text-placeholder text-xs ml-1">
+            <span className="text-placeholder text-xs">
               Access only to assigned division
             </span>
           )}
           {role === "admin" && (
-            <span className="text-placeholder text-xs ml-1">
+            <span className="text-placeholder text-xs">
               Manage users within division
             </span>
           )}
           {role === "coo" && (
-            <span className="text-placeholder text-xs ml-1">
+            <span className="text-placeholder text-xs">
               Full access across the organisation
             </span>
           )}
@@ -235,7 +235,7 @@ export default function SignUpForm({ options }: SignUpFormProps) {
             </span>
           )}
           {role === "coo" && (
-            <span className="text-placeholder text-xs ml-1">
+            <span className="text-placeholder text-xs">
               COO operates across all divisions
             </span>
           )}

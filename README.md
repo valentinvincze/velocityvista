@@ -1,12 +1,33 @@
-# VelocityVista
+# Velocity Vista
 
-A role-based sales intelligence dashboard built with Next.js 16 App Router and Supabase. Live at [velocityvista.vercel.app](https://velocityvista.vercel.app).
+A role-based sales intelligence dashboard built with Next.js 16 App Router and Supabase.
+
+---
+
+## Demo
+
+Live at [velocityvista.vercel.app](https://velocityvista.vercel.app)
+
+Test account (rep view):
+
+- **Email:** jane@velocityv.com
+- **Password:** Demouser850!
+
+The demo is scoped to a rep account. The admin and COO layers — division
+management, role-scoped user termination, token-gated invites — are shown
+below and available to walk through in an interview.
+
+**Admin panel — admin view**
+![Admin panel — admin view](src/assets/admin-panel-admin-view.png)
+
+**Leaderboard — COO view**
+![Leaderboard — COO view](src/assets/leaderboard-page-coo-view.png)
 
 ---
 
 ## Stack
 
-Next.js 16 · React 19 · TypeScript · Supabase (Auth, PostgreSQL, Storage) · Tailwind v4 · Recharts · Resend · Zod · react-hook-form
+Next.js 16 · React 19 · TypeScript · Supabase (Auth, PostgreSQL, Storage) · Tailwind v4
 
 ---
 
@@ -14,13 +35,15 @@ Next.js 16 · React 19 · TypeScript · Supabase (Auth, PostgreSQL, Storage) · 
 
 **Server components by default.** All data fetching happens at the page level in server components and is passed down as props. There is no client-side data fetching — no `useEffect`, no loading states for initial data. Client components own UI state only.
 
-**Server actions for mutations.** Every form submission goes through a typed server action. Zod validates the payload before any database call. `react-hook-form` handles client-side validation; `useActionState` handles the server response — connected via `startTransition` so the UI stays responsive during the action.
+**Server actions for mutations.** Form submissions go through typed server actions — `react-hook-form` handles client-side validation and `useActionState` handles the server response, connected via `startTransition`. Zod validates the payload before the database call in the log sale action, where user input warrants it. The settings modal is the exception: it passes `FormData` directly rather than a typed object, because File objects don't survive typed object serialization in Next.js server actions.
 
-**Middleware-level route protection.** Route guards live in `src/proxy.ts`, not in page components. The middleware checks the session and role on every request and redirects before the page ever renders. Role is always read from `user.user_metadata` — never the database — to avoid an extra round trip on every navigation.
+**Middleware-level route protection.** Route guards live in `src/proxy.ts` — the Next.js 16 middleware convention, replacing `middleware.ts` — not in page components. The middleware checks the session and role on every request and redirects before the page ever renders. Role is always read from `user.user_metadata` — never the database — to avoid an extra round trip on every navigation.
 
 **Separate Supabase clients.** The regular client uses the anon key and respects RLS. A separate admin client in `src/lib/supabase/admin.ts` uses the service role key, scoped only to operations that require it (user deletion). The two are never mixed.
 
 **RLS as the enforcement layer.** Row-level security policies on the database handle data scoping — the application layer reflects that scoping, it doesn't duplicate it.
+
+**Dark mode.** Implemented via Tailwind v4's `@variant dark` and `next-themes`. Color tokens are CSS variables with light and dark overrides — components don't reference Tailwind color utilities directly, so the theme switches without any class juggling at the component level.
 
 ---
 
@@ -28,13 +51,29 @@ Next.js 16 · React 19 · TypeScript · Supabase (Auth, PostgreSQL, Storage) · 
 
 Three roles: `coo`, `admin`, `rep`. The role drives routing, data scoping, and UI visibility.
 
-| Role | Routing | Data scope |
-|------|---------|------------|
-| `coo` | `/dashboard/admin` | All divisions |
+| Role    | Routing            | Data scope        |
+| ------- | ------------------ | ----------------- |
+| `coo`   | `/dashboard/admin` | All divisions     |
 | `admin` | `/dashboard/admin` | Own division only |
-| `rep` | `/dashboard` | Own division only |
+| `rep`   | `/dashboard`       | Own division only |
 
 COOs can create divisions, send signup tokens, and terminate any non-COO user. Admins can terminate reps within their division. Reps have no admin access.
+
+---
+
+## Pages
+
+Every page and feature in VelocityVista is role-aware — what you see, what data is scoped to you, and what actions are available all depend on your role.
+
+**Dashboard** — the rep's primary view. Displays a performance ring tracking secured rate against total deals, weekly and monthly stat cards (secured, lost, total with period-over-period deltas), a glance bar showing the current week's secured/lost split, a recent activity list sorted by closing date, and a dual-line chart toggling between weekly and monthly deal volume.
+
+**Admin panel** — the elevated view for admins and COOs. Stat cards at the top show user and division counts, scoped to the admin's own division or globally for a COO. Below is a filterable user table with email search, role filter, and division filter (COO only). COOs can terminate any non-COO user; admins can terminate reps within their own division. COOs additionally get controls to create divisions and send signup tokens directly from the panel header.
+
+**Leaderboard** — role-scoped charts showing rep performance by secured revenue for the current month. Reps see a best-five bar chart within their own division. Admins see both best and worst charts, division-scoped. COOs see both charts across all reps with a division pill filter to drill into a specific division.
+
+**Team** — rep cards sorted by revenue, with gold, silver, and bronze treatment for top performers and a collapsible Needs Attention panel for the bottom performers — both available to admins (division-scoped) and COOs (all divisions, with a division pill filter). Reps see their own division unsorted with their own card pinned first in a distinct style, and no revenue figures or ranking treatment.
+
+**Settings** — a modal accessible from the navbar and page header for uploading or removing a profile picture, with live preview before confirming.
 
 ---
 
@@ -46,9 +85,7 @@ Sign up is not publicly accessible. A COO sends a signup token via email (Resend
 
 ## Data aggregation
 
-Sales data is aggregated at the database level using PostgREST's aggregation support (`pgrst.db_aggregates_enabled`). The leaderboard and team pages receive pre-summed revenue figures from a single query — no aggregation in JavaScript.
-
-Weekly performance metrics use calendar Monday–Sunday boundaries, not rolling 7-day windows, via a shared `weeklyCalc` utility consumed by the dashboard, stats, and glance bar components.
+Two aggregation strategies run in parallel. The leaderboard and team pages use PostgREST's aggregation support (`pgrst.db_aggregates_enabled`) to receive pre-summed revenue figures directly from the database. The dashboard — performance card, stat cards, glance bar — aggregates in JavaScript from raw sales rows via a shared `weeklyCalc` utility. That utility uses calendar Monday–Sunday boundaries, not rolling 7-day windows, and is consumed by every component on the main dashboard page.
 
 ---
 

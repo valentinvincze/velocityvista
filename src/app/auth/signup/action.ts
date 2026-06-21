@@ -20,7 +20,7 @@ export const signUpNewUser = async (
           full_name: data.fullName,
           job_title: data.jobTitle,
           role: data.role,
-          division_id: data.division,
+          division_id: data.role === "coo" ? null : data.division || null,
         },
       },
     });
