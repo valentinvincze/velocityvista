@@ -12,6 +12,8 @@ export const signUpNewUser = async (
   const supabase = await createClient();
 
   try {
+    const divisionId = data.role === "coo" ? null : data.division || null;
+
     const { error } = await supabase.auth.signUp({
       email: data.emailAddress.toLowerCase(),
       password: data.password,
@@ -20,7 +22,7 @@ export const signUpNewUser = async (
           full_name: data.fullName,
           job_title: data.jobTitle,
           role: data.role,
-          division_id: data.role === "coo" ? null : data.division || null,
+          division_id: divisionId,
         },
       },
     });

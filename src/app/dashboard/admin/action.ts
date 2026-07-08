@@ -18,6 +18,10 @@ export const logDivision = async (
 
   if (!user) return { success: false, error: "Unauthorized" };
 
+  if (user.app_metadata?.role !== "coo") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     const { error } = await supabase.from("divisions").insert({
       created_by: user.id,
@@ -55,6 +59,10 @@ export const sendToken = async (_prevState: unknown, data: ISendToken) => {
   } = await supabase.auth.getUser();
 
   if (!user) return { success: false, error: "Unauthorized" };
+
+  if (user.app_metadata?.role !== "coo") {
+    return { success: false, error: "Unauthorized" };
+  }
 
   const today = new Date();
 
@@ -116,6 +124,33 @@ export const terminateContract = async (id: string) => {
   } = await supabase.auth.getUser();
 
   if (!user) return { success: false, error: "Unauthorized" };
+
+  const callerRole = user.app_metadata?.role;
+  const callerDivisionId = user.app_metadata?.division_id;
+
+  if (callerRole !== "admin" && callerRole !== "coo") {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const { data: target, error: targetError } = await supabaseAdmin
+    .from("profiles")
+    .select("role, division_id")
+    .eq("id", id)
+    .single();
+
+  if (targetError || !target) {
+    return { success: false, error: "User not found." };
+  }
+
+  const canTerminate =
+    (callerRole === "coo" && target.role !== "coo") ||
+    (callerRole === "admin" &&
+      target.role === "rep" &&
+      target.division_id === callerDivisionId);
+
+  if (!canTerminate) {
+    return { success: false, error: "Unauthorized" };
+  }
 
   try {
     const { error } = await supabase.from("profiles").delete().eq("id", id);

@@ -13,7 +13,7 @@ export default async function DashLeaderboardPage() {
     redirect("/auth/signin");
   }
 
-  const role = user!.user_metadata.role;
+  const role = user!.app_metadata.role;
   const id = user!.id;
 
   const today = new Date();
@@ -48,7 +48,7 @@ export default async function DashLeaderboardPage() {
       )
       .eq("sales.status", "secured")
       .gte("sales.closing_date", firstDayOfMonth.toISOString().split("T")[0])
-      .eq("division_id", user.user_metadata.division_id)
+      .eq("division_id", user.app_metadata.division_id)
       .eq("role", "rep");
 
     divProfileData = data;

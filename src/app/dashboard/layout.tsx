@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const role = user!.user_metadata.role;
+  const role = user!.app_metadata.role;
 
   let userData: userData;
 

@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const role: string | undefined = user?.user_metadata?.role;
+  const role: string | undefined = user?.app_metadata?.role;
   const isAdmin = !!role && ADMIN_ROLES.includes(role);
 
   if (!user && !pathname.startsWith("/auth")) {

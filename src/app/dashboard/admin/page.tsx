@@ -15,7 +15,7 @@ export default async function DashAdminPage() {
     redirect("/auth/signin");
   }
 
-  const role = user!.user_metadata.role;
+  const role = user!.app_metadata.role;
 
   let profileData: ProfileData;
   let profileError;
@@ -36,7 +36,7 @@ export default async function DashAdminPage() {
     const { data, error } = await supabase
       .from("profiles")
       .select("id, full_name, email, role, created_at, division_id")
-      .eq("division_id", user.user_metadata.division_id);
+      .eq("division_id", user.app_metadata.division_id);
 
     divProfileData = data;
     divProfileError = error;

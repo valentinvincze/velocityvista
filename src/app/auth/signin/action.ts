@@ -36,7 +36,7 @@ export const signInUser = async (
       }
     }
 
-    const role = user?.user_metadata?.role;
+    const role = user?.app_metadata?.role;
 
     role === "rep" ? redirect("/dashboard") : redirect("/dashboard/admin");
     return null;
