@@ -28,6 +28,11 @@ export const signInUser = async (
             success: false,
             error: "Please fill out all fields!",
           };
+        case "invalid_credentials":
+          return {
+            success: false,
+            error: "Invalid email or password.",
+          };
         default:
           return {
             success: false,

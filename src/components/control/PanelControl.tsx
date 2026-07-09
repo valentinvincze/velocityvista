@@ -38,16 +38,14 @@ export default function PanelControl({
     role === "coo"
       ? sortedProfileData?.filter(
           (data) =>
-            (divId
-              ? data.division_id === divId
-              : data.division_id || data.role === "coo") &&
-            (roleValue ? data.role === roleValue : data.role) &&
-            (searchValue ? data.email.includes(searchValue) : data.email),
+            (!divId || data.division_id === divId) &&
+            (!roleValue || data.role === roleValue) &&
+            (!searchValue || data.email.includes(searchValue.toLowerCase())),
         )
       : sortedDivProfileData?.filter(
           (data) =>
-            (roleValue ? data.role === roleValue : data.role) &&
-            (searchValue ? data.email.includes(searchValue) : data.email),
+            (!roleValue || data.role === roleValue) &&
+            (!searchValue || data.email.includes(searchValue.toLowerCase())),
         );
 
   const addDivName = (data: ProfileData) =>

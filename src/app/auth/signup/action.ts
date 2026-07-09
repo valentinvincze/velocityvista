@@ -1,39 +1,36 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { redirect } from "next/navigation";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { ISignUpForm, AuthState } from "@/types";
 
 export const signUpNewUser = async (
   _prevState: AuthState,
   data: ISignUpForm,
 ): Promise<AuthState> => {
-  const supabase = await createClient();
+  const supabaseAdmin = createAdminClient();
 
   try {
     const divisionId = data.role === "coo" ? null : data.division || null;
 
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabaseAdmin.auth.admin.createUser({
       email: data.emailAddress.toLowerCase(),
       password: data.password,
-      options: {
-        data: {
-          full_name: data.fullName,
-          job_title: data.jobTitle,
-          role: data.role,
-          division_id: divisionId,
-        },
+      email_confirm: true,
+      user_metadata: {
+        full_name: data.fullName,
+        job_title: data.jobTitle,
+        role: data.role,
+        division_id: divisionId,
       },
     });
 
     if (error) {
       console.error("Supabase sign-up error:", error.message);
       switch (error.code) {
-        case "anonymous_provider_disabled":
+        case "email_exists":
           return {
             success: false,
-            error: "Please fill out all fields!",
+            error: "An account with this email already exists.",
           };
         default:
           return {
@@ -43,9 +40,8 @@ export const signUpNewUser = async (
       }
     }
 
-    redirect("/dashboard");
+    return { success: true, error: "" };
   } catch (error) {
-    if (isRedirectError(error)) throw error;
     if (error instanceof Error)
       console.error("Unexpected error during sign-up:", error.message);
     return {

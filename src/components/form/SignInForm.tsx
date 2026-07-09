@@ -95,12 +95,12 @@ export default function SignInForm() {
               <IoMdEye className="w-4 h-4 fill-gray-500 dark:fill-gray-400" />
             )}
           </button>
-          {errors.password && (
-            <span className="text-xs text-red-500 font-medium ml-1">
-              {errors.password.message}
-            </span>
-          )}
         </div>
+        {errors.password && (
+          <span className="text-xs text-red-500 font-medium ml-1">
+            {errors.password.message}
+          </span>
+        )}
       </div>
       <hr className="border-gray-200 my-2 dark:border-neutral-700" />
       {error && (

@@ -39,7 +39,7 @@ Next.js 16 · React 19 · TypeScript · Supabase (Auth, PostgreSQL, Storage) · 
 
 **Middleware-level route protection.** Route guards live in `src/proxy.ts` — the Next.js 16 middleware convention, replacing `middleware.ts` — not in page components. The middleware checks the session and role on every request and redirects before the page ever renders. Role is always read from `user.app_metadata` on the already-fetched session, never via a separate query to `profiles` — avoiding an extra round trip on every navigation. It's `app_metadata` specifically, not `user_metadata`: only the service role can write to it, so a signed-in user can never escalate their own role from the client. A database trigger stamps it atomically with the profile row at signup.
 
-**Separate Supabase clients.** The regular client uses the anon key and respects RLS. A separate admin client in `src/lib/supabase/admin.ts` uses the service role key, scoped only to operations that require it — verifying a target user's real role and division before a termination, then deleting the auth user. The two are never mixed.
+**Separate Supabase clients.** The regular client uses the anon key and respects RLS. A separate admin client in `src/lib/supabase/admin.ts` uses the service role key, scoped only to operations that require it — creating accounts on signup, verifying a target user's real role and division before a termination, then deleting the auth user. The two are never mixed.
 
 **RLS as the enforcement layer.** Row-level security policies on the database handle data scoping — the application layer reflects that scoping, it doesn't duplicate it.
 
@@ -80,6 +80,8 @@ Every page and feature in VelocityVista is role-aware — what you see, what dat
 ## Token-gated signup
 
 Sign up is not publicly accessible. A COO sends a signup token via email (Resend). The middleware validates the token against the `invites` table — checking existence and expiry — before the signup page loads. Invalid or expired tokens redirect to sign in. Tokens expire after 24 hours.
+
+Account creation goes through the admin API (`supabaseAdmin.auth.admin.createUser()`) rather than the public sign-up call, so submitting the form doesn't log the browser into the new account — the same operator can create several accounts in one sitting without a session getting in the way.
 
 ---
 

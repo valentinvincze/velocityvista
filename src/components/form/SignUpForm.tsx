@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, startTransition, useState } from "react";
+import { useActionState, startTransition, useState, useEffect } from "react";
 import type { SignUpFormProps, ISignUpForm } from "@/types";
 import { signUpNewUser } from "@/app/auth/signup/action";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -14,10 +14,15 @@ export default function SignUpForm({ options }: SignUpFormProps) {
     formState: { errors },
     handleSubmit,
     watch,
+    reset,
   } = useForm<ISignUpForm>({ defaultValues: { role: "", division: "" } });
   const [showPassword, setShowPassword] = useState(false);
 
   const role = watch("role");
+
+  useEffect(() => {
+    if (error?.success) reset();
+  }, [error, reset]);
 
   const divisionOptions = options.map((option) => (
     <option key={option.id} value={option.id}>
@@ -106,7 +111,9 @@ export default function SignUpForm({ options }: SignUpFormProps) {
             },
           })}
           aria-required="true"
-          aria-invalid={error || errors.emailAddress ? "true" : "false"}
+          aria-invalid={
+            (error && !error.success) || errors.emailAddress ? "true" : "false"
+          }
           disabled={isPending}
         ></input>
         {errors.emailAddress && (
@@ -136,7 +143,9 @@ export default function SignUpForm({ options }: SignUpFormProps) {
               },
             })}
             aria-required="true"
-            aria-invalid={error || errors.password ? "true" : "false"}
+            aria-invalid={
+              (error && !error.success) || errors.password ? "true" : "false"
+            }
             disabled={isPending}
           ></input>
           <button
@@ -150,12 +159,12 @@ export default function SignUpForm({ options }: SignUpFormProps) {
               <IoMdEye className="w-4 h-4 fill-gray-500 dark:fill-gray-400" />
             )}
           </button>
-          {errors.password && (
-            <span className="text-xs text-red-500 font-medium ml-1">
-              {errors.password.message}
-            </span>
-          )}
         </div>
+        {errors.password && (
+          <span className="text-xs text-red-500 font-medium ml-1">
+            {errors.password.message}
+          </span>
+        )}
       </div>
       <hr className="border-gray-200 my-2 dark:border-neutral-700" />
       <div className="grid grid-cols-2 gap-2">
@@ -241,7 +250,7 @@ export default function SignUpForm({ options }: SignUpFormProps) {
           )}
         </div>
       </div>
-      {error && (
+      {error && !error.success && (
         <div role="alert" className="text-red-500 font-medium mt-2 ml-1">
           {error.error}
         </div>
